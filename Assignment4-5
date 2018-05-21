@@ -32,18 +32,24 @@ OF = OF = OF =
 
 4.3.8
 1. (True/False): The OFFSET operator always returns a 16-bit value.
+False
 
 2. (True/False): The PTR operator returns the 32-bit address of a variable.
+False
 
 3. (True/False): The TYPE operator returns a value of 4 for doubleword operands.
+True
 
 4. (True/False): The LENGTHOF operator returns the number of bytes in an operand.
+False
 
 5. (True/False): The SIZEOF operator returns the number of bytes in an operand.
-
+True
 
 4.4.5 
 4. (True/False): The following is an indexed operand: array[esi]
+True
+
 myBytes  BYTE 10h,20h,30h,40h
     myWords  WORD 8Ah,3Bh,72h,44h,66h
     myDoubles  DWORD 1,2,3,4,5
