@@ -1,4 +1,72 @@
- 4.2.8 Section Review, Questions 1, 2, 3, 4, 5, 6	
-- [ ] 4.3.8 Section Review, Questions 1,2,3,4,5
-- [ ] 4.4.5 Section Review, Questions 4,5
-- [ ] 4.10 Programming Exercises, Question 7
+Homework Questions 4/5
+4.2.8
+
+    .data
+    val1 BYTE  10h
+    val2 WORD  8000h
+    val3 DWORD 0FFFFh
+    val4 WORD  7FFFh
+    
+1. Write an instruction that increments val2.
+
+2. Write an instruction that subtracts val3 from EAX.
+
+3. Write instructions that subtract val4 from val2.
+
+4. If val2 is incremented by 1 using the ADD instruction, what will be the values of the Carry
+and Sign flags?
+
+5. If val4 is incremented by 1 using the ADD instruction, what will be the values of the Over- flow
+and Sign flags?
+
+6. Where indicated, write down the values of the Carry, Sign, Zero, and Overflow flags after each
+instruction has executed:
+
+mov ax,7FF0h add al,10h add ah,1 add ax,2
+; a. CF =
+; b. CF =
+; c. CF =
+SF = SF = SF =
+ZF = ZF = ZF =
+OF = OF = OF =
+
+4.3.8
+1. (True/False): The OFFSET operator always returns a 16-bit value.
+
+2. (True/False): The PTR operator returns the 32-bit address of a variable.
+
+3. (True/False): The TYPE operator returns a value of 4 for doubleword operands.
+
+4. (True/False): The LENGTHOF operator returns the number of bytes in an operand.
+
+5. (True/False): The SIZEOF operator returns the number of bytes in an operand.
+
+
+4.4.5 
+4. (True/False): The following is an indexed operand: array[esi]
+myBytes  BYTE 10h,20h,30h,40h
+    myWords  WORD 8Ah,3Bh,72h,44h,66h
+    myDoubles  DWORD 1,2,3,4,5
+    myPointer  DWORD myDoubles
+5.
+Fill in the requested register values on the right side of the following instruction sequence:
+
+mov esi,OFFSET myBytes 
+mov al,[esi]                                               ; a. AL =
+mov al,[esi+3]                                             ; b. AL =
+mov esi,OFFSET myWords + 2 
+mov ax,[esi]                                               ; c. AX =
+mov edi,8
+mov edx,[myDoubles + edi]                                  ; d. EDX =
+mov edx,myDoubles[edi]                                     ; e. EDX =            
+mov ebx,myPointer
+mov eax,[ebx+4]                                            ; f. EAX =
+ 
+
+4.10 
+7. Copy a String in Reverse Order
+Write a program with a loop and indirect addressing that copies a string from source to target, reversing 
+the character order in the process. Use the following variables:
+
+         source BYTE "This is the source string",0
+         target BYTE SIZEOF source DUP('#')
