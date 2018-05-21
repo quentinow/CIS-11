@@ -1,0 +1,23 @@
+6.11.2 
+5. Boolean Calculator (1)
+Create a program that functions as a simple boolean calculator for 32-bit integers. 
+It should dis- play a menu that asks the user to make a selection from the following list:
+1. x AND y
+2. x OR y
+3. NOT x
+4. x XOR y
+5. Exit program
+When the user makes a choice, call a procedure that displays the name of the operation about
+to be performed. You must implement this procedure using the Table-Driven Selection technique,
+shown in Section 6.5.4. (You will implement the operations in Exercise 6.) (The Irvine32 library
+is required for this solution program.)
+
+6. Boolean Calculator (2)
+Continue the solution program from Exercise 5 by implementing the following procedures:
+• AND_op: Prompt the user for two hexadecimal integers. AND them together and display the result
+in hexadecimal.
+• OR_op: Prompt the user for two hexadecimal integers. OR them together and display the result in hexadecimal.
+• NOT_op: Prompt the user for a hexadecimal integer. NOT the integer and display the result in hexadecimal.
+• XOR_op: Prompt the user for two hexadecimal integers. Exclusive-OR them together and display the result in hexadecimal.
+(The Irvine32 library is required for this solution program.)
+
