@@ -1,1 +1,25 @@
-Chapter 4, Section 4.10 Programming Exercises: Question 2.
+ 4.10  
+2. Exchanging Pairs of Array Values
+Write a program with a loop and indexed addressing that exchanges every pair of values in
+an array with an even number of elements. Therefore, item i will exchange with item i+1,
+and item i+2 will exchange with item i+3, and so on.
+
+INCLUDE Irvine32.inc
+.data
+arr1 DWORD 11,22,33,44,55,66,77,88
+.code
+
+main PROC
+
+call Clrscr
+mov esi,0; initialize the ESI pointers
+mov ecx,(LENGTHOF arr1)/2
+L1:
+xchg arr1[esi],arr1[esi+1] 
+add esi,2
+
+loop L1
+exit
+
+main ENDP
+END main
