@@ -1,0 +1,11 @@
+ 5.9 
+ 10. Fibonacci Generator
+Write a procedure that produces N values in the Fibonacci number series and stores them in an array of
+doubleword. Input parameters should be a pointer to an array of doubleword, a counter of the number of
+values to generate. Write a test program that calls your procedure, passing N = 47. The first value in
+the array will be 1, and the last value will be 2,971,215,073. Use the Visual Studio debugger to open
+and inspect the array contents 
+
+ 7. Random Screen Locations
+Write a program that displays a single character at 100 random screen locations, using a timing delay of
+100 milliseconds. Hint: Use the GetMaxXY procedure to determine the current size of the console window.
