@@ -9,8 +9,103 @@ It should dis- play a menu that asks the user to make a selection from the follo
 5. Exit program
 When the user makes a choice, call a procedure that displays the name of the operation about
 to be performed. You must implement this procedure using the Table-Driven Selection technique,
-shown in Section 6.5.4. (You will implement the operations in Exercise 6.) (The Irvine32 library
-is required for this solution program.)
+shown in Section 6.5.4. 
+
+INCLUDE Irvine32.inc
+.data
+oprTable BYTE '1'
+      DWORD PRINT_AND
+EntrySize = ($-oprTable)
+       BYTE '2'
+       DWORD PRINT_OR
+       BYTE '3'
+       DWORD PRINT_NOT
+       BYTE '4'
+       DWORD PRINT_XOR
+       BYTE '5'
+       DWORD EXIT_PROG
+       
+CountEntries = ($-oprTable) / EntrySize
+
+str1 BYTE "1. x and y", 0dh,0ah,0
+str1 BYTE "2. x or y", 0dh,0ah,0
+str1 BYTE "3. x and y", 0dh,0ah,0
+str1 BYTE "4. NOT x", 0dh,0ah,0
+str1 BYTE "5. Exit Program", 0dh,0ah,0
+strCh BYTE "Enter Your Choice: ",0
+
+strA BYTE "AND operation", 0
+strO BYTE "OR operation", 0
+strN BYTE "NOT operation", 0
+strX BYTE "XOR operation", 0
+strE BYTE "Thank you", 0
+.code
+
+main PROC
+call Clrscr
+mov edx, OFFSET str1
+call WriteString
+mov edx, OFFSET str2
+call Writetring
+mov edx, OFFSET str3
+call WriteString
+mov edx, OFFSET str4
+call Writetring
+mov edx, OFFSET str5
+call WriteString
+mov edx, OFFSET strCh
+call Writetring
+call ReadChar
+call WriteChar
+mov esi, OFFSET oprTable
+mov ecx, CountEntries
+call Crlf
+
+L1:
+    cmp al,[esi]
+    jne L2
+    call NEAR PTR [esi+1]
+    call Crlf
+    jmp L3
+    
+L2:
+    add esi,EntrySize
+    loop L1
+    
+L3:
+    exit
+main ENDP
+
+PRINT_AND PROC
+    mov edx, OFFSET strA
+    call WriteString
+    ret
+PRINT_AND ENDP
+PRINT_OR PROC
+    mov edx,OFFSET strO
+    call WriteString
+    ret
+PRINT_OR ENDP
+
+PRINT_NOT PROC
+    mov edx, OFFSET strN
+    call WriteString
+    ret
+PRINT_NOT ENDP
+
+PRINT_XOR PROC
+    move edx,OFFSET strX
+    call WriteString
+    ret
+Print_XOR ENDP
+
+EXIT_PROG PROC
+    mov edx, OFFSET strE
+    call WriteString
+    ret
+ EXIT_PROG ENDP
+ END main
+
 
 6. Boolean Calculator (2)
 Continue the solution program from Exercise 5 by implementing the following procedures:
@@ -19,5 +114,159 @@ in hexadecimal.
 • OR_op: Prompt the user for two hexadecimal integers. OR them together and display the result in hexadecimal.
 • NOT_op: Prompt the user for a hexadecimal integer. NOT the integer and display the result in hexadecimal.
 • XOR_op: Prompt the user for two hexadecimal integers. Exclusive-OR them together and display the result in hexadecimal.
-(The Irvine32 library is required for this solution program.)
+
+INCLUDE Irvine32.inc
+.data
+
+choice BYTE ?
+str1 BYTE "1. x AND y", 0
+str2 BYTE "2. x OR y", 0
+str3 BYTE "3. NOT x", 0
+str4BYTE "4. x XOR y", 0
+str5 BYTE "5. Exit Program", 0
+strCh BYTE "Enter Your Choice:", 0
+
+strA BYTE "AND operation", 0
+strO BYTE "OR operation", 0
+strN BYTE "NOT operation", 0
+strX BYTE "XOR operation", 0
+strOp1 BYTE "Enter one hexadecimal integer: ",0
+strOp2 BYTE "Enter two hexadecimal integers: ",0
+strOp3 BYTE "The result of operation is: ",0
+
+.code
+main PROC
+call Clrscr
+call DisplayMenu
+call DisplayOpr
+exit
+main ENDP
+
+DisplayMenu PROC USES edx
+mov edx, OFFSET str1
+call WriteString
+call Crlf
+mov edx, OFFSET str2
+call WriteString
+call Crlf
+mov edx, OFFSET str3
+call WriteString
+call Crlf
+mov edx, OFFSET str4
+call WriteString
+call Crlf
+mov edx, OFFSET str5
+call WriteString
+call Crlf
+mov edx, OFFSET strCh
+call WriteString
+call Crlf
+
+mov choice, eax
+call Crlf
+ret
+DisplayMenu ENDP
+
+DisplayOpr PROC USES edx
+mov eax,choice
+cmp eax,1
+jne Label1
+
+mov edx, OFFSET strA
+call WriteString
+call Crlf
+call AND_op
+jmp LblEnd
+Label1:
+cmp eax,2
+jne Label2
+
+mov edx, OFFSET strO
+call WriteString
+call Crlf
+call OR_op
+jmp LblEnd
+Label2
+cmp eax,3
+jne Label3
+
+mov edx, OFFSET strN
+call WriteString
+call Crlf
+call NOT_op
+jmp LblEnd
+Label3:
+cmp eax,4
+jne LblEnd
+
+mov edx, OFFSET strX
+call WriteString
+call Crlf
+call XOR_op
+LblEnd:
+ret
+
+DisplayOpr ENDP
+AND_op PROC USES ebx edx
+mov edx, OFFSET strOp2
+call WriteString
+call Crlf
+call ReadHex
+mov ebx, eax
+call ReadHex
+AND ebx,eax
+mov eax,ebx
+mov edx, OFFSET strRes
+call WriteString
+call WriteHex
+call Crlf
+ret
+AND_op ENDP
+
+OR_op PROC USES ebx edx
+mov edx, OFFSET strOp2
+call WriteString
+call Crlf
+call ReadHex
+mov ebx,eax
+call ReadHex
+OR ebx,eax
+
+mov eax,ebx
+mov edx, OFFSET strRes
+call WriteString
+call WriteHex
+call Crlf
+ret
+OR_op ENDP
+NOT_op PROC USES edx
+
+mov edx, OFFSET strOp1
+call WriteString
+call crlf
+call ReadHex
+NOT eax
+
+mov edx, OFFSET strRes
+call WriteString
+call WriteHex
+call Crlf
+ret
+NOT_op ENDP
+XOR_op PROC USES ebx edx
+mov edx, OFFSET strOp2
+call WriteString
+callCrlf
+call ReadHex
+mov ebx,eax
+call ReadHex
+XOR ebx,eax
+mov eax,ebx
+mov edx, OFFSET strRes
+call WriteString
+call WriteHex
+call Crlf
+ret
+XOR_op ENDP
+END main
 
