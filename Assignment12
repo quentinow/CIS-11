@@ -3,3 +3,28 @@
 Using a loop and indexed addressing, write code that rotates the members of a 32-bit integer
 array forward one position. The value at the end of the array must wrap around to the first position.
 For example, the array [10,20,30,40] would be transformed into [40,10,20,30].
+
+INCLUDE Irvine32.inc
+.data
+arr1 DWORD 11, 22, 33, 44, 55, 66, 77
+arrSize = ($ - arr1) / TYPE arr1
+temp DWORD ?
+.code
+
+main PROC
+call Clrscr
+mov esi,(arrSize-1)
+mov temp,arr1[arrSize-1]
+mov ecx,arrSize
+dec ecx
+
+L1:
+mov arr1[esi],arr1[esi-1]
+dec esi
+loop L1
+mov arr1[esi],temp
+
+exit
+main ENDP
+
+END main
