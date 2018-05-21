@@ -1,0 +1,124 @@
+3.1.11
+1. Using the value –35, write it as an integer literal in decimal, hexadecimal, octal, and binary 
+formats that are consistent with MASM syntax.
+ decimal- -35d
+ hexadecimal- 0DDh
+ octal- 335o
+ binary- 11011101b
+2. (Yes/No): Is A5h a valid hexadecimal literal?
+ No
+3. (Yes/No): Does the multiplication operator (*) have a higher precedence than the division
+operator (/) in integer expressions?
+ No
+4. Create a single integer expression that uses all the operators from Section 3.1.2. Calculate 
+the value of the expression.
+(8-4) / (-7+9) * 7 MOD 6
+= (4) / (2)* 7 MOD 6
+= 2*7 MOD 6
+= 14 MOD 7
+= 7
+
+3.2.4 
+4. In the AddTwo program, which register holds the sum?
+mov eax,5
+add eax,6
+
+5. In the AddTwo program, which statement halts the program?
+exit
+
+3.3.3
+
+1. What types of files are produced by the assembler?
+object files and listing files
+
+2. (True/False): The linker extracts assembled procedures from the link library and inserts
+them in the executable program.
+True
+
+3. (True/False): When a program’s source code is modified, it must be assembled and linked 
+again before it can be executed with the changes.
+True
+
+4. Which operating system component reads and executes programs?
+Thr loader reads and executes programs.
+
+3.4.13
+1. Create an uninitialized data declaration for a 16-bit signed integer.
+Int16 SWORD ?
+
+2. Create an uninitialized data declaration for an 8-bit unsigned integer.
+Int8 BYTE ?
+
+3. Create an uninitialized data declaration for an 8-bit signed integer.
+Int8 SBYTE ?
+
+4. Create an uninitialized data declaration for an 64-bit signed integer
+Int64 QWORD ? 
+
+5.Which data type can hold a 32-bit signed integer?
+SDWORD
+
+3.5.5
+
+3. Write a statement that causes the assembler to calculate the number of bytes in the following
+array, and assign the value to a symbolic constant named ArraySize: $-myArray
+         myArray WORD 20 DUP(?) 
+
+3.9.1 
+4. Explain why the term assembler language is not quite correct.
+The language is assembly language and assembler language is different.
+
+5. Explain the difference between big endian and little endian. Also, look up the origins of this
+term on the Web.
+big endian orders bytes from high to low, while little endian orders them low to high.
+
+6. Why might you use a symbolic constant rather than an integer literal in your code?
+you might rather use an symbolic constant instead of a integer literal because the value of symbolic constant 
+does not reserve any memory space.
+
+25. Which data directive creates a 32-bit signed integer variable?
+SDWORD
+3.9.2
+
+4. Find out if you can declare a variable of type DWORD and assign it a negative value. 
+What does this tell you about the assembler’s type checking?
+negative values can not be stored or represented with DWORD, but you can use SDWORD. This tells us that
+asssembly language is an untyped language, so the assemlber does not check types of value that are assigned
+meaning that whoever is programming needs to make sure they have values between the range assigned as a variable.
+
+7. Declare an array of 120 uninitialized unsigned doubleword values.
+arr1 DWORD 120 DUP ?
+
+13. Declare a string variable containing the word “TEST” repeated 500 times.
+str1 BYTE 500 DUP("Test")
+
+3.10 Programming Exercises, Pick any 1 exercise
+1. Integer Expression Calculation
+Using the AddTwo program from Section 3.2 as a reference, write a program that calculates the following 
+expression, using registers: A = (A + B) − (C + D). 
+Assign integer values to the EAX, EBX, ECX, and EDX registers.
+
+TITLE Integer Expression Calculation (intExp.asm)
+INCLUDE Irvine32.inc
+.data
+A DWORD 150
+B DWORD 100
+C DWORD 50
+D DWORD 40
+.code
+main PROC
+
+mov eax,A 
+mov ebx,B
+mov ecx,C
+mov edx,D
+
+add eax,ebx
+add ecx,edx
+
+sub eax,ecx
+
+mov A,eax
+exit
+main ENDP
+END main
