@@ -52,19 +52,20 @@ c. 00001111 􏰁+ 00001111 = 00011110
 
 5.What is the minimum number of binary bits needed to represent each of the following unsigned 
 decimal integers?
-a. 65
-b. 409
-c. 16385
+a. 65 = 7 bits
+b. 409 = 9 bits
+c. 16385 = 15 bits
+
 
 6.What is the hexadecimal representation of each of the following binary numbers?
-a. 0011 0101 1101 1010 
-b. 1100 1110 1010 0011 
-c. 1111 1110 1101 1011
+a. 0011 0101 1101 1010 = 35DA
+b. 1100 1110 1010 0011 = CEA3
+c. 1111 1110 1101 1011 = FEDB
 
 7.What is the binary representation of the following hexadecimal numbers?
-a. A4693FBC 
-b. B697C7A1 
-c. 2B3D9461
+a. A4693FBC = 1010 0100 0110 1001 0011 1111 1011 1100
+b. B697C7A1 = 1011 0110 1001 0111 1100 0111 1010 0001
+c. 2B3D9461 = 0010 1011 0011 1101 1001 0100 0110 0001
 
 1.7.1
 1. In an 8-bit binary number, which is the most significant bit (MSB)?
