@@ -6,6 +6,133 @@ values to generate. Write a test program that calls your procedure, passing N = 
 the array will be 1, and the last value will be 2,971,215,073. Use the Visual Studio debugger to open
 and inspect the array contents 
 
+INCLUDE Irvine32.inc
+N = 47
+.data
+fibArr DWORD N DUP (0)
+.code
+
+main PROC
+
+call Clrscr
+mov esi,OFFSET fibArr
+mov ecx, N
+call generateFibonacci
+call Display
+exit
+main ENDP
+
+generateFibonacci PROC USES esi ecx
+mov eax, 1
+mov [esi],eax
+add esi,4
+mov ebx,1
+mov [esi],ebx
+add esi,4
+sub ecx,2
+
+L1:
+mov edx,ebx
+add ebx,eax
+mov [esi],ebx
+mov eax,edx
+add esi,4
+loop L1
+ret
+generateFibonacci ENDP
+
+Display PROC USES ecx esi
+
+L1:
+mov eax, [esi]
+call WriteDec
+call Crlf
+add esi,4
+Loop L1
+ret
+Display ENDP
+
+END main
+
+
  7. Random Screen Locations
 Write a program that displays a single character at 100 random screen locations, using a timing delay of
 100 milliseconds. Hint: Use the GetMaxXY procedure to determine the current size of the console window.
+
+INCLUDE Irvine32.inc
+MAX_VALUE = 100
+.data
+
+str1 BYTE "Enter The character that want to display on Screen: ",0
+char BYTE ?
+rows BYTE ?
+cols BYTE ?
+randrow BYTE ?
+randcol BYTE ?
+.code
+main PROC
+
+mov edx, OFFSET str1
+call writeString
+call ReadChar
+mov char, al
+call crlf
+call WriteChar
+call crlf
+
+
+mov eax,0
+mov ebx,0
+mov ecx,0
+mov edx,0
+
+call crlf
+call GetMaxXY
+mov rows,dh
+mov cols,dl
+call crlf
+call crlf
+
+mov eax,0
+mov ebx,0
+mov ecx,0
+mov edx,0
+
+
+mov ecx,MAX_VALUE   
+
+L1:
+movzx eax,rows
+call RandomRange
+mov randrow, al
+
+
+call crlf
+mov eax,0
+
+movzx eax,cols
+call RandomRange
+mov randcol, al
+
+
+call crlf
+mov eax,0
+mov ebx,0
+mov edx,0
+
+
+mov dh,randrow
+mov dl,randcol
+call Gotoxy
+
+movzx eax,char
+call WriteChar
+
+call crlf
+mov eax,0
+
+loop L1
+exit                      
+
+main ENDP
+END main
