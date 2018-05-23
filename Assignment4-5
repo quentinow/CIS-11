@@ -8,27 +8,25 @@ Homework Questions 4/5
     val4 WORD  7FFFh
     
 1. Write an instruction that increments val2.
+inc val2 
 
 2. Write an instruction that subtracts val3 from EAX.
+sub eax, val3
 
 3. Write instructions that subtract val4 from val2.
+mov ax, val4
+sub val2,ax
 
 4. If val2 is incremented by 1 using the ADD instruction, what will be the values of the Carry
 and Sign flags?
-
+add val2,1
 5. If val4 is incremented by 1 using the ADD instruction, what will be the values of the Over- flow
 and Sign flags?
+the over-flow and sign flags will be OF=1 and SF=1
 
 6. Where indicated, write down the values of the Carry, Sign, Zero, and Overflow flags after each
 instruction has executed:
-
-mov ax,7FF0h add al,10h add ah,1 add ax,2
-; a. CF =
-; b. CF =
-; c. CF =
-SF = SF = SF =
-ZF = ZF = ZF =
-OF = OF = OF =
+CF= 1, SF= 0, ZF= 1, OF= 0
 
 4.3.8
 1. (True/False): The OFFSET operator always returns a 16-bit value.
@@ -58,15 +56,15 @@ myBytes  BYTE 10h,20h,30h,40h
 Fill in the requested register values on the right side of the following instruction sequence:
 
 mov esi,OFFSET myBytes 
-mov al,[esi]                                               ; a. AL =
-mov al,[esi+3]                                             ; b. AL =
+mov al,[esi]                                               ; a. AL = 10h
+mov al,[esi+3]                                             ; b. AL = 40h
 mov esi,OFFSET myWords + 2 
-mov ax,[esi]                                               ; c. AX =
+mov ax,[esi]                                               ; c. AX = 003Bh
 mov edi,8
-mov edx,[myDoubles + edi]                                  ; d. EDX =
-mov edx,myDoubles[edi]                                     ; e. EDX =            
+mov edx,[myDoubles + edi]                                  ; d. EDX = 3
+mov edx,myDoubles[edi]                                     ; e. EDX = 3           
 mov ebx,myPointer
-mov eax,[ebx+4]                                            ; f. EAX =
+mov eax,[ebx+4]                                            ; f. EAX = 2
  
 
 4.10 
@@ -76,3 +74,33 @@ the character order in the process. Use the following variables:
 
          source BYTE "This is the source string",0
          target BYTE SIZEOF source DUP('#')
+         
+INCLUDE Irvine32.inc
+
+.data
+source BYTE " This is the source string", 0
+target BYTE SIZEOF source DUP('#')
+
+.code
+main PROC
+
+mov esi, (OFFSET source) + (SIZEOF source) - 2
+mov edi, OFFSET target
+mov ecx, SIZEOF source
+
+L1: mov al, [esi]
+mov [edi], al
+dec esi ; pointer to source string
+inc edi ; pointer to target string
+loop L1
+
+mov esi, OFFSET target ; offset of variable
+mov ebx, 1 ; byte format
+mov ecx, SIZEOF target-1 ; counter
+call Dumpmem
+
+exit
+
+main ENDP
+END main
+
