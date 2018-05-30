@@ -4,27 +4,78 @@ Using a loop and indexed addressing, write code that rotates the members of a 32
 array forward one position. The value at the end of the array must wrap around to the first position.
 For example, the array [10,20,30,40] would be transformed into [40,10,20,30].
 
-INCLUDE Irvine32.inc
+ExitProcess proto
+WriteInt64 proto
+ReadInt64 proto
 .data
-arr1 DWORD 11, 22, 33, 44, 55, 66, 77
-arrSize = ($ - arr1) / TYPE arr1
-temp DWORD ?
+
+array QWORd 1d,2d,3d,4d,5d,6d,7d,8d,9d,10d
+target QWORD 10 DUP(0)
+
 .code
+main proc
 
-main PROC
-call Clrscr
-mov esi,(arrSize-1)
-mov temp,arr1[arrSize-1]
-mov ecx,arrSize
-dec ecx
+mov rcx, 10
+mov rbx, 0
+mov r12 ,8
 
-L1:
-mov arr1[esi],arr1[esi-1]
-dec esi
-loop L1
-mov arr1[esi],temp
+LP1:
 
-exit
-main ENDP
+mov rax,rbx
+mul r12
+mov r11,rax
+mov rax, array[r11]
+call WriteInt64
+inc rbx
+loop LP1
 
-END main
+mov rcx, 10
+mov rbx, 0
+mov r12 ,8
+
+SLP:
+
+mov rax,rbx
+mul r12
+mov r11,rax
+mov rbp,r11;
+add rbp,8
+		
+mov r14, array[r11]
+mov target[rbp],r14
+		
+
+;mov r15,array[rbp]
+;add r11,24
+;mov array[r11],r15
+;mov array[rbp],r14
+cmp rbx, 10
+je ifTen
+ifTen:
+mov r14, array[r11]
+mov target[0],r14
+
+add rbx, 1
+loop SLP
+
+call ReadInt64
+
+
+mov rcx, 10
+mov rbx, 0
+mov r12 ,8
+
+LP2:
+
+mov rax,rbx
+mul r12
+mov r11,rax
+mov rax, array[r11]
+call WriteInt64
+inc rbx
+loop LP2
+
+call ReadInt64
+call ExitProcess
+main endp
+end
