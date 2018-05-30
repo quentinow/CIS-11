@@ -4,22 +4,70 @@ Write a program with a loop and indexed addressing that exchanges every pair of 
 an array with an even number of elements. Therefore, item i will exchange with item i+1,
 and item i+2 will exchange with item i+3, and so on.
 
-INCLUDE Irvine32.inc
+ExitProcess proto
+WriteInt64 proto
+ReadInt64 proto
 .data
-arr1 DWORD 11,22,33,44,55,66,77,88
+
+array QWORd 1d,2d,3d,4d,5d,6d
+
 .code
+main proc
 
-main PROC
+mov rcx, 6
+mov rbx, 0
+mov r12 ,8
 
-call Clrscr
-mov esi,0; initialize the ESI pointers
-mov ecx,(LENGTHOF arr1)/2
 L1:
-xchg arr1[esi],arr1[esi+1] 
-add esi,2
 
+mov rax,rbx
+mul r12
+mov r11,rax
+mov rax, array[r11]
+call WriteInt64
+inc rbx
 loop L1
-exit
 
-main ENDP
-END main
+mov rcx, 5
+mov rbx, 0
+mov r12 ,8
+
+SLP:
+
+mov rax,rbx
+mul r12
+mov r11,rax
+mov rbp,r11;
+add rbp,8
+		
+mov r14, array[r11]
+mov r15,array[rbp]
+
+mov array[r11],r15
+mov array[rbp],r14
+
+add rbx, 2
+loop SLP
+
+call ReadInt64
+
+
+mov rcx, 10
+mov rbx, 0
+mov r12 ,8
+
+LP1:
+
+mov rax,rbx
+mul r12
+mov r11,rax
+mov rax, array[r11]
+call WriteInt64
+inc rbx
+loop LP1
+
+call ReadInt64
+call ExitProcess
+
+main endp
+end
