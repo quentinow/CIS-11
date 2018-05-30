@@ -14,133 +14,415 @@ shown in Section 6.5.4.
 INCLUDE Irvine32.inc
 
 .data
-caseTable byte '1'        ;lookup value
-          dword Process_1 ;address of lookup value
-entrySize = ($ - caseTable )
-          byte '2'
-          dword Process_2
-          byte '3'
-          dword Process_3
-          byte '4'
-          dword Process_4
-          byte '5'
-          dword Process_5
-numberOfEntries = 5
-msgIntro  byte "This is Your Name's fourth assembly program which will later",0dh,0ah
-          byte "function as a simple boolean calculator for 32-bit integers. The",0dh,0ah
-          byte "current output will only be the name of the operation about to be",0dh,0ah
-          byte "performed as selected by the user.",0dh,0ah,0
-msgSelMn  byte "-------------------------------------",0dh,0ah
-          byte "       32-Bit Boolean Calculator"     ,0dh,0ah
-          byte "-------------------------------------",0dh,0ah
-          byte "1. x AND y"     ,0dh,0ah
-          byte "2. x OR y"      ,0dh,0ah
-          byte "3. NOT x"       ,0dh,0ah
-          byte "4. x XOR y"     ,0dh,0ah
-          byte "5. Exit Program",0dh,0ah
-          byte "-------------------------------------",0dh,0ah
-          byte "Please enter selection 1,2,3,4 or 5: ",0
-msg1      byte "Calling Process 1 (x AND y)",0dh,0ah,0
-msg2      byte "Calling Process 2 (x OR y)",0dh,0ah,0
-msg3      byte "Calling Process 3 (NOT x)",0dh,0ah,0
-msg4      byte "Calling Process 4 (x XOR y)",0dh,0ah,0
-msg5      byte "Calling Process 5 (Exit Program)",0dh,0ah,0
+msgMenu BYTE "---- Boolean Calculator ----",0dh,0ah
+	BYTE 0dh,0ah
+	BYTE "1. x AND y"     ,0dh,0ah
+	BYTE "2. x OR y"      ,0dh,0ah
+	BYTE "3. NOT x"       ,0dh,0ah
+	BYTE "4. x XOR y"     ,0dh,0ah
+	BYTE "5. Exit program",0
+
+msgAND BYTE "Boolean AND",0
+msgOR  BYTE "Boolean OR",0
+msgNOT BYTE "Boolean NOT",0
+msgXOR BYTE "Boolean XOR",0
+
+msgInteger1 BYTE "Enter the first 32-bit hexadecimal integer:  ",0
+msgInteger2 BYTE "Enter the second 32-bit hexadecimal integer: ",0
+msgResult   BYTE "The 32-bit hexadecimal result is:            ",0
+
+caseTable BYTE '1'			
+	DWORD AND_op			
+EntrySize = ($ - caseTable )
+	BYTE '2'
+	DWORD OR_op
+	BYTE '3'
+	DWORD NOT_op
+	BYTE '4'
+	DWORD XOR_op
+	BYTE '5'
+	DWORD ExitProgram
+NumberOfEntries = ($ - caseTable) / EntrySize
 
 .code
 main PROC
+	call Clrscr				
 
-        mov edx,OFFSET msgIntro  
-        call WriteString         
-        call Crlf                
-        call WaitMsg          
-        call Clrscr            
-        call Menu                
+Menu:
+	mov edx, OFFSET msgMenu		
+	call WriteString		
+	call Crlf				
 
-ExitProg::exit                 
+L1:	call ReadChar			
+	cmp al, '5'			
+	ja L1					
+	cmp al, '1'
+	jb L1					
+
+	call Crlf				
+	call ChooseProcedure		
+	jc quit				
+
+	call Crlf
+	jmp Menu				
+
+quit: exit
 main ENDP
 
+ChooseProcedure PROC
 
-Menu PROC
+	push ebx				
+	push ecx				
 
+	mov ebx, OFFSET caseTable	
+	mov ecx, NumberOfEntries	
 
+L1:	cmp al, [ebx]			
+	jne L2			
+	call NEAR PTR [ebx + 1]		
+	jmp L3
 
-        mov  edx,OFFSET msgSelMn ;ask user for input
-        call WriteString         ;display msgSelMn
-        call ReadChar            ;read one character
-        mov  ebx,OFFSET caseTable;point EBX to the table
-        mov  ecx,numberOfEntries ;loop counter
+L2:	add ebx, EntrySize		
+	loop L1				
 
-        L1:
-        cmp  al,[ebx]            ;match found?
-        jne  L2                  ;no: continue
-        call NEAR PTR [ebx + 1]  ;yes: call the procedure
-        call WriteString         ;display message
-        call Crlf                ;endl
-        call WaitMsg             ;pause message
-        call Clrscr              ;clear screen
-        jmp  L3                  ;exit the search
+L3:	pop ecx				
+	pop ebx				
 
-        L2:
-        add  ebx,5               ;point to the next entry
-        loop L1                  ;repeat until ECX = 0
+	ret					
 
-        L3:
-        jmp Menu                 ;run Menu again
+ChooseProcedure ENDP
 
-Menu EndP
+AND_op PROC
 
+	pushad				
 
-Process_1 PROC
+	mov edx, OFFSET msgAND		
+	call WriteString			
+	call Crlf
+	call Crlf
 
-        mov  edx,OFFSET msg1     ;msg1 into edx
-        call Crlf                ;endl
-        call Crlf                ;endl
-        ret                      ;return
-Process_1 ENDP
+	mov edx, OFFSET msgInteger1	
+	call WriteString
+	call ReadHex			 
+	mov ebx, eax			 
 
-Process_2 PROC
+	mov edx, OFFSET msgInteger2	 
+	call WriteString
+	call ReadHex			 
 
-        mov  edx,OFFSET msg2     ;msg2 into edx
-        call Crlf                ;endl
-        call Crlf                ;endl
-        ret                      ;return
-Process_2 ENDP
+	and eax, ebx			 
 
-Process_3 PROC
+	mov edx, OFFSET msgResult	 
+	call WriteString			 
+	call WriteHex			 
+	call Crlf
 
-        mov  edx,OFFSET msg3     ;msg3 into edx
-        call Crlf                ;endl
-        call Crlf                ;endl
-        ret                      ;return
-Process_3 ENDP
+	popad					 
+	ret					 
 
-Process_4 PROC
+AND_op ENDP
 
-        mov  edx,OFFSET msg4     ;msg4 into edx
-        call Crlf                ;endl
-        call Crlf                ;endl
-        ret                      ;return
-Process_4 ENDP
+OR_op PROC
 
-Process_5 PROC
+	pushad				 
 
-        mov  edx,OFFSET msg5     ;msg5 into edx
-        call Crlf                ;endl
-        call Crlf                ;endl
-        call WriteString         ;display message
-        call Crlf                ;endl
-        stc                      ;CF = 1
-        jc ExitProg              ;if CF=1 then jump to Global ExitProg
+	mov edx, OFFSET msgOR		 
+	call WriteString			 
+	call Crlf
+	call Crlf
 
-Process_5 ENDP
+	mov edx, OFFSET msgInteger1	 
+	call WriteString
+	call ReadHex			 
+	mov ebx, eax			 
+
+	mov edx, OFFSET msgInteger2	 
+	call WriteString
+	call ReadHex			 
+
+	or eax, ebx				 
+
+	mov edx, OFFSET msgResult	 
+	call WriteString
+	call WriteHex 
+	call Crlf
+
+	popad					 
+	ret					 
+OR_op ENDP
+
+NOT_op PROC
+
+	pushad				 
+
+	mov edx, OFFSET msgNOT		 
+	call WriteString			 
+	call Crlf
+	call Crlf
+
+	mov edx, OFFSET msgInteger1	 
+	call WriteString
+	call ReadHex		 
+
+	not eax				 
+
+	mov edx, OFFSET msgResult	 
+	call WriteString
+	call WriteHex			 
+	call Crlf
+
+	popad					 
+	ret					 
+
+NOT_op ENDP
+
+XOR_op PROC
+
+	pushad				 
+
+	mov edx, OFFSET msgXOR		 
+	call WriteString			 
+	call Crlf
+	call Crlf
+
+	mov edx, OFFSET msgInteger1 
+	call WriteString
+	call ReadHex			 
+	mov ebx, eax			 
+
+	mov edx, OFFSET msgInteger2	 
+	call WriteString
+	call ReadHex			 
+
+	xor eax, ebx			 
+
+	mov edx, OFFSET msgResult	 
+	call WriteString
+	call WriteHex			 
+	call Crlf
+
+	popad					 
+	ret					 
+
+XOR_op ENDP
+
+ExitProgram PROC
+
+	stc					 
+	ret					 
+
+ExitProgram ENDP
 
 END main
 
 6. Boolean Calculator (2)
 Continue the solution program from Exercise 5 by implementing the following procedures:
-• AND_op: Prompt the user for two hexadecimal integers. AND them together and display the result
-in hexadecimal.
-• OR_op: Prompt the user for two hexadecimal integers. OR them together and display the result in hexadecimal.
+• AND_op: Prompt the user for two hexadecimal integers. AND them together and display the result in hexadecimal.
+OR_op: Prompt the user for two hexadecimal integers. OR them together and display the result in hexadecimal.
 • NOT_op: Prompt the user for a hexadecimal integer. NOT the integer and display the result in hexadecimal.
 • XOR_op: Prompt the user for two hexadecimal integers. Exclusive-OR them together and display the result in hexadecimal.
+(The Irvine32 library is required for this solution program.)
 
+INCLUDE Irvine32.inc
+
+.data
+msgMenu BYTE "---- Boolean Calculator ----------",0dh,0ah
+	BYTE 0dh,0ah
+	BYTE "1. x AND y"     ,0dh,0ah
+	BYTE "2. x OR y"      ,0dh,0ah
+	BYTE "3. NOT x"       ,0dh,0ah
+	BYTE "4. x XOR y"     ,0dh,0ah
+	BYTE "5. Exit program",0
+
+msgAND BYTE "Boolean AND",0
+msgOR  BYTE "Boolean OR",0
+msgNOT BYTE "Boolean NOT",0
+msgXOR BYTE "Boolean XOR",0
+
+msgOperand1 BYTE "Input the first 32-bit hexadecimal operand:  ",0
+msgOperand2 BYTE "Input the second 32-bit hexadecimal operand: ",0
+msgResult   BYTE "The 32-bit hexadecimal result is:            ",0
+
+caseTable BYTE '1'	 
+	DWORD AND_op	 
+EntrySize = ($ - caseTable )
+	BYTE '2'
+	DWORD OR_op
+	BYTE '3'
+	DWORD NOT_op
+	BYTE '4'
+	DWORD XOR_op
+	BYTE '5'
+	DWORD ExitProgram
+NumberOfEntries = ($ - caseTable) / EntrySize
+
+.code
+main PROC
+	call Clrscr
+
+Menu:
+	mov edx, OFFSET msgMenu	 
+	call WriteString
+	call Crlf
+
+L1:	call ReadChar
+	cmp al, '5'	 
+	ja L1	 
+	cmp al, '1'
+	jb L1	
+
+	call Crlf
+	call ChooseProcedure
+	jc quit	
+
+	call Crlf
+	jmp Menu	 
+
+quit: exit
+main ENDP
+
+ 
+ChooseProcedure PROC
+ 
+	push ebx
+	push ecx
+
+	mov ebx, OFFSET caseTable	 
+	mov ecx, NumberOfEntries	 
+
+L1:	cmp al, [ebx]	 
+	jne L2	 
+	call NEAR PTR [ebx + 1]	 
+	jmp L3
+
+L2:	add ebx, EntrySize	 
+	loop L1	
+
+L3:	pop ecx
+	pop ebx
+
+	ret
+ChooseProcedure ENDP
+
+ 
+AND_op PROC
+ 
+	pushad	 
+
+	mov edx, OFFSET msgAND	 
+	call WriteString	 
+	call Crlf
+	call Crlf
+
+	mov edx, OFFSET msgOperand1	 
+	call WriteString
+	call ReadHex	 
+	mov ebx, eax	 
+
+	mov edx, OFFSET msgOperand2	 
+	call WriteString
+	call ReadHex	 
+
+	and eax, ebx	 
+
+	mov edx, OFFSET msgResult	 
+	call WriteString
+	call WriteHex 
+	call Crlf
+
+	popad	
+	ret
+AND_op ENDP
+
+ 
+OR_op PROC
+ 
+	pushad	 
+
+	mov edx, OFFSET msgOR	 
+	call WriteString	 
+	call Crlf
+	call Crlf
+
+	mov edx, OFFSET msgOperand1	 
+	call WriteString
+	call ReadHex	 
+	mov ebx, eax	 
+
+	mov edx, OFFSET msgOperand2	 
+	call WriteString
+	call ReadHex	 
+
+	or eax, ebx	 
+
+	mov edx, OFFSET msgResult	 
+	call WriteString
+	call WriteHex	 
+	call Crlf
+
+	popad	 
+	ret
+OR_op ENDP
+
+ 
+NOT_op PROC
+ 
+	pushad	 
+
+	mov edx, OFFSET msgNOT	 
+	call WriteString	 
+	call Crlf
+	call Crlf
+
+	mov edx, OFFSET msgOperand1	 
+	call WriteString
+	call ReadHex	 
+
+	not eax	 
+
+	mov edx, OFFSET msgResult	 
+	call WriteString
+	call WriteHex	 
+	call Crlf
+
+	popad	 
+	ret
+NOT_op ENDP
+
+ 
+XOR_op PROC
+ 
+	pushad	 
+	mov edx, OFFSET msgXOR	 
+	call WriteString	 
+	call Crlf
+	call Crlf
+
+	mov edx, OFFSET msgOperand1	 
+	call WriteString
+	call ReadHex	 
+	mov ebx, eax 
+
+	mov edx, OFFSET msgOperand2	 
+	call WriteString
+	call ReadHex	 
+
+	xor eax, ebx	 
+
+	mov edx, OFFSET msgResult 
+	call WriteString
+	call WriteHex	 
+	call Crlf
+
+	popad 
+	ret
+XOR_op ENDP
+
+ 
+ExitProgram PROC
+ 
+	stc 
+	ret
+ExitProgram ENDP
+
+END main
